@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración | Clínica Dental</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/configuracion.css') }}">
+</head>
+<body>
+<div class="contenedor">
+    {% include 'componentes/sidebar.html' %}
+
+    <main class="principal">
+        <header class="header">
+            <div class="marca-header">
+                <strong>Configuración</strong>
+                <span>Identidad y datos profesionales del consultorio</span>
+            </div>
+            <div class="usuario">
+                <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                <span>Odontóloga general</span>
+            </div>
+        </header>
+
+        <section class="contenido configuracion-contenido">
+            <div class="config-hero">
+                <div>
+                    <span class="config-kicker">PERFIL DEL CONSULTORIO</span>
+                    <h1>Configuración del sistema</h1>
+                    <p>Consulta la identidad profesional utilizada en reportes, consentimientos y documentos clínicos.</p>
+                </div>
+                <img src="{{ url_for('static', filename='img/logo_rosa_arriaga.jpeg') }}" alt="Logo Dra. Rosa Arriaga">
+            </div>
+
+            <div class="config-grid">
+                <article class="config-card principal-card">
+                    <div class="card-icono">🦷</div>
+                    <div>
+                        <span class="etiqueta">Responsable del consultorio</span>
+                        <h2>{{ datos_odontologa.nombre }}</h2>
+                        <p>{{ datos_odontologa.profesion }}</p>
+                    </div>
+                </article>
+
+                <article class="config-card">
+                    <span class="etiqueta">Registro profesional</span>
+                    <strong>{{ datos_odontologa.registro_profesional }}</strong>
+                    <small>Se utiliza en consentimientos y reportes clínicos.</small>
+                </article>
+
+                <article class="config-card">
+                    <span class="etiqueta">Nombre mostrado</span>
+                    <strong>Clínica Dental</strong>
+                    <small>Dra. Rosa Elisa Arriaga</small>
+                </article>
+
+                <article class="config-card">
+                    <span class="etiqueta">Usuario principal</span>
+                    <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                    <small>Acceso principal al sistema del consultorio.</small>
+                </article>
+            </div>
+
+            <article class="config-nota">
+                <div class="nota-icono">✓</div>
+                <div>
+                    <h3>Identidad clínica sincronizada</h3>
+                    <p>El nombre de la doctora, su profesión y su registro profesional se muestran de forma consistente en las pantallas principales y en los documentos generados por el sistema.</p>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
+</body>
+</html>

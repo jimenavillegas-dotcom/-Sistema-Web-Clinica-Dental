@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Pacientes | 🦷 Clinica Dental</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/pacientes.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+</head>
+
+
+<body>
+
+<div class="contenedor">
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    {% include 'componentes/sidebar.html' %}
+
+
+    <!-- =====================================================
+         CONTENIDO PRINCIPAL
+         ===================================================== -->
+
+    <main class="principal">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div>
+                <strong>Pacientes</strong>
+            </div>
+
+
+            <div class="usuario">
+                <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                <span>Odontóloga general</span>
+            </div>
+
+        </header>
+
+
+        <!-- CONTENIDO -->
+
+        <section class="contenido">
+
+            <!-- ENCABEZADO -->
+
+            <div class="encabezado-pagina">
+
+                <div>
+
+                    <h1>Pacientes registrados</h1>
+
+                    <p>
+                        Consulta, busca y administra los expedientes
+                        clínicos de los pacientes.
+                    </p>
+
+                </div>
+
+
+                <a href="{{ url_for('nuevo_paciente') }}"
+                   class="btn-nuevo-paciente">
+
+                    + Nuevo paciente
+
+                </a>
+
+            </div>
+
+
+            <!-- =====================================================
+                 BUSCADOR
+                 ===================================================== -->
+
+            <div class="barra-pacientes">
+
+                <div class="buscador">
+
+                    <span>🔍</span>
+
+                    <input
+                        type="text"
+                        id="buscarPaciente"
+                        placeholder="Buscar por nombre, expediente, teléfono o correo..."
+                    >
+
+                </div>
+
+
+                <div class="contador-pacientes">
+
+                    {{ pacientes|length }}
+
+                    {% if pacientes|length == 1 %}
+
+                        paciente registrado
+
+                    {% else %}
+
+                        pacientes registrados
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 TABLA DE PACIENTES
+                 ===================================================== -->
+
+            <div class="tabla-card">
+
+                <table class="tabla-pacientes">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Expediente</th>
+
+                            <th>Paciente</th>
+
+                            <th>Teléfono</th>
+
+                            <th>Fecha de nacimiento</th>
+
+                            <th>Registro</th>
+
+                            <th>Estado</th>
+
+                            <th>Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="tablaPacientes">
+
+                        {% for paciente in pacientes %}
+
+                        <tr>
+
+                            <!-- NÚMERO DE EXPEDIENTE -->
+
+                            <td>
+
+                                <span class="numero-expediente">
+
+                                    {{ paciente.numero_historia }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- PACIENTE -->
+
+                            <td>
+
+                                <div class="paciente-tabla">
+
+                                    <div class="avatar-paciente">
+
+                                        {{ paciente.nombre[0]|upper }}
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <strong>
+
+                                            {{ paciente.nombre }}
+                                            {{ paciente.apellidos }}
+
+                                        </strong>
+
+
+                                        <span>
+
+                                            {% if paciente.correo %}
+
+                                                {{ paciente.correo }}
+
+                                            {% else %}
+
+                                                Sin correo registrado
+
+                                            {% endif %}
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- TELÉFONO -->
+
+                            <td>
+
+                                {% if paciente.telefono %}
+
+                                    {{ paciente.telefono }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- FECHA DE NACIMIENTO -->
+
+                            <td>
+
+                                {% if paciente.fecha_nacimiento %}
+
+                                    {{ paciente.fecha_nacimiento.strftime("%d/%m/%Y") }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- FECHA DE REGISTRO -->
+
+                            <td>
+
+                                {% if paciente.fecha_registro %}
+
+                                    {{ paciente.fecha_registro.strftime("%d/%m/%Y") }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ESTADO -->
+
+                            <td>
+
+                                {% if paciente.activo %}
+
+                                    <span class="estado-activo">
+
+                                        ● Activo
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="estado-inactivo">
+
+                                        ● Inactivo
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACCIONES -->
+
+                            <td class="acciones-tabla">
+
+                                <a
+                                    href="{{ url_for('expediente_paciente', paciente_id=paciente.id) }}"
+                                    class="btn-expediente"
+                                >
+
+                                    Ver expediente
+
+                                </a>
+
+                                <a
+                                    href="{{ url_for('editar_paciente', paciente_id=paciente.id) }}"
+                                    class="btn-expediente"
+                                >
+
+                                    Editar datos
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% else %}
+
+                        <!-- SI NO HAY PACIENTES -->
+
+                        <tr>
+
+                            <td colspan="7">
+
+                                <div class="sin-pacientes">
+
+                                    <div class="sin-pacientes-icono">
+                                        👤
+                                    </div>
+
+
+                                    <h3>
+                                        No hay pacientes registrados
+                                    </h3>
+
+
+                                    <p>
+
+                                        Registra tu primer paciente para
+                                        comenzar a crear expedientes clínicos.
+
+                                    </p>
+
+
+                                    <a
+                                        href="{{ url_for('nuevo_paciente') }}"
+                                        class="btn-nuevo-paciente"
+                                    >
+
+                                        + Registrar paciente
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     BUSCADOR DE PACIENTES
+     ========================================================= -->
+
+<script>
+
+    const buscador =
+        document.getElementById("buscarPaciente");
+
+    const filas =
+        document.querySelectorAll(
+            "#tablaPacientes tr"
+        );
+
+
+    buscador.addEventListener(
+        "input",
+        function () {
+
+            const texto =
+                buscador.value
+                    .toLowerCase()
+                    .trim();
+
+
+            filas.forEach(
+                function (fila) {
+
+                    const contenido =
+                        fila.textContent
+                            .toLowerCase();
+
+
+                    if (
+                        contenido.includes(texto)
+                    ) {
+
+                        fila.style.display = "";
+
+                    } else {
+
+                        fila.style.display = "none";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

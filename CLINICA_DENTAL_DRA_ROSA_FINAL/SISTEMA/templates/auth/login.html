@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión | Clínica Dental Dra. Rosa Elisa Arriaga</title>
+
+    <style>
+        :root {
+            --rosa: #b72f70;
+            --rosa-oscuro: #7b1849;
+            --rosa-claro: #f6d7e7;
+            --vino: #4b102d;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(225,90,154,.24), transparent 32%),
+                linear-gradient(135deg, #fff7fb 0%, #f9e6ef 48%, #f3d4e3 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .login-card {
+            width: min(410px, 100%);
+            background: rgba(255,255,255,.97);
+            padding: 32px;
+            border-radius: 22px;
+            border: 1px solid rgba(183,47,112,.12);
+            box-shadow: 0 20px 50px rgba(95,18,57,.15);
+        }
+
+        .marca {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .marca img {
+            display: block;
+            width: 190px;
+            max-width: 82%;
+            height: 92px;
+            object-fit: contain;
+            margin: 0 auto 10px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin: 0 0 5px;
+            color: var(--vino);
+            font-size: 24px;
+        }
+
+        .marca p {
+            color: #8f2056;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+            color: #4b2638;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 13px;
+            margin-bottom: 18px;
+            border: 1px solid #ead3df;
+            border-radius: 10px;
+            background: #fffafd;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--rosa);
+            box-shadow: 0 0 0 3px rgba(183,47,112,.10);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(90deg, #d94c91, #b72f70);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 9px 20px rgba(183,47,112,.20);
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #c83d82, #9d265f);
+        }
+
+        .error {
+            background: #fff0f5;
+            color: #9e235d;
+            border: 1px solid #f1c7da;
+            padding: 10px;
+            border-radius: 9px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+    <div class="marca">
+        <img src="{{ url_for('static', filename='img/logo_rosa_arriaga.png') }}"
+             alt="Logo Clínica Dental Dra. Rosa Elisa Arriaga">
+        <h1>Clínica Dental</h1>
+        <p>Dra. Rosa Elisa Arriaga</p>
+    </div>
+
+    {% with mensajes = get_flashed_messages() %}
+        {% if mensajes %}
+            {% for mensaje in mensajes %}
+                <div class="error">{{ mensaje }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Correo electrónico</label>
+        <input type="email" name="correo" placeholder="correo@ejemplo.com" required>
+
+        <label>Contraseña</label>
+        <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+
+        <button type="submit">Iniciar sesión</button>
+    </form>
+</div>
+
+</body>
+</html>

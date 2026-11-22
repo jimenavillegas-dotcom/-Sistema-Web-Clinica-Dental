@@ -1,0 +1,40 @@
+{# MENU_ROSA_FINAL_V2 - menú único compartido #}
+{% set endpoint_actual = request.endpoint or '' %}
+{% set desde_expedientes = request.args.get('origen') == 'expedientes' %}
+<aside class="sidebar sidebar-rosa-final {{ sidebar_extra_class|default('') }}">
+    <div class="logo sidebar-logo-unificado">
+        <img src="{{ url_for('static', filename='img/logo_rosa_arriaga.png') }}"
+             alt="Logo Clínica Dental Dra. Rosa Elisa Arriaga"
+             class="logo-img sidebar-logo-img">
+        <div class="logo-identidad sidebar-identidad">
+            <span>Clínica Dental</span>
+            <small>Dra. Rosa Elisa Arriaga</small>
+        </div>
+    </div>
+
+    <nav class="menu sidebar-menu-unificado">
+        <a href="{{ url_for('dashboard') }}"
+           class="{{ 'activo' if endpoint_actual == 'dashboard' else '' }}">🏠 Inicio</a>
+
+        <a href="{{ url_for('pacientes') }}"
+           class="{{ 'activo' if endpoint_actual in ['pacientes', 'nuevo_paciente', 'editar_paciente'] or (endpoint_actual == 'expediente_paciente' and not desde_expedientes) else '' }}">👥 Pacientes</a>
+
+        <a href="{{ url_for('agenda_citas') }}"
+           class="{{ 'activo' if endpoint_actual in ['agenda_citas', 'actualizar_estado_cita'] else '' }}">📅 Citas</a>
+
+        <a href="{{ url_for('expedientes') }}"
+           class="{{ 'activo' if endpoint_actual == 'expedientes' or (endpoint_actual == 'expediente_paciente' and desde_expedientes) else '' }}">🗂 Expedientes</a>
+        <a href="{{ url_for('pacientes') }}">🦷 Odontograma</a>
+        <a href="{{ url_for('pacientes') }}">🩺 Tratamientos</a>
+
+        <a href="{{ url_for('reportes') }}"
+           class="{{ 'activo' if endpoint_actual in ['reportes', 'reporte_paciente'] else '' }}">📊 Reportes</a>
+
+        <a href="{{ url_for('configuracion') }}"
+           class="{{ 'activo' if endpoint_actual == 'configuracion' else '' }}">⚙ Configuración</a>
+    </nav>
+
+    <div class="salir">
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </div>
+</aside>

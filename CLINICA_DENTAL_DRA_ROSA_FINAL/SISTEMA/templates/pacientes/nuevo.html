@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nuevo Paciente | Clínica Dental</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/pacientes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <!-- SIDEBAR -->
+
+    {% include 'componentes/sidebar.html' %}
+
+
+    <!-- CONTENIDO -->
+
+    <main class="principal">
+
+        <header class="header">
+
+            <div>
+                <strong>Nuevo Paciente</strong>
+            </div>
+
+            <div class="usuario">
+                <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                <span>Odontóloga general</span>
+            </div>
+
+        </header>
+
+
+        <section class="contenido">
+
+            <div class="encabezado-pagina">
+
+    <div>
+        <h1>Registrar nuevo paciente</h1>
+
+        <p>
+            Crea el expediente inicial con los datos generales del paciente.
+        </p>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}"
+       class="btn-secundario">
+        ← Volver
+    </a>
+
+</div>
+
+
+            {% with mensajes = get_flashed_messages() %}
+                {% if mensajes %}
+
+                    {% for mensaje in mensajes %}
+                        <div class="mensaje-exito">
+                            ✓ {{ mensaje }}
+                        </div>
+                    {% endfor %}
+
+                {% endif %}
+            {% endwith %}
+
+
+            <form method="POST">
+
+                <div class="form-card">
+
+                    <div class="titulo-seccion">
+
+                        <div class="numero-seccion">
+                            1
+                        </div>
+
+                        <div>
+                            <h3>Datos Generales</h3>
+                            <p>Información básica del paciente.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="campo">
+                            <label>Nombre *</label>
+
+                            <input
+                                type="text"
+                                name="nombre"
+                                placeholder="Nombre"
+                                required>
+                        </div>
+
+
+                        <div class="campo">
+                            <label>Apellidos *</label>
+
+                            <input
+                                type="text"
+                                name="apellidos"
+                                placeholder="Apellidos"
+                                required>
+                        </div>
+
+
+                        <div class="campo">
+                            <label>Fecha de nacimiento *</label>
+
+                            <input
+                                type="date"
+                                name="fecha_nacimiento"
+                                required>
+                        </div>
+
+
+                        <div class="campo">
+                            <label>Género *</label>
+
+                            <select name="genero" required>
+
+                                <option value="">
+                                    Seleccionar
+                                </option>
+
+                                <option value="Femenino">
+                                    Femenino
+                                </option>
+
+                                <option value="Masculino">
+                                    Masculino
+                                </option>
+
+                                <option value="Otro">
+                                    Otro
+                                </option>
+
+                            </select>
+                        </div>
+
+
+                        <div class="campo">
+
+                            <label>
+                                Documento de identidad
+                            </label>
+
+                            <input
+                                type="text"
+                                name="documento_identidad"
+                                placeholder="CURP, INE u otro">
+
+                        </div>
+
+
+                        <div class="campo">
+
+                            <label>
+                                Lugar de nacimiento
+                            </label>
+
+                            <input
+                                type="text"
+                                name="lugar_nacimiento"
+                                placeholder="Ciudad / Estado">
+
+                        </div>
+
+
+                        <div class="campo">
+                            <label>Teléfono</label>
+
+                            <input
+                                type="text"
+                                name="telefono"
+                                placeholder="55 1234 5678">
+                        </div>
+
+
+                        <div class="campo">
+                            <label>Correo electrónico</label>
+
+                            <input
+                                type="email"
+                                name="correo"
+                                placeholder="correo@ejemplo.com">
+                        </div>
+
+
+                        <div class="campo">
+                            <label>Ocupación</label>
+
+                            <input
+                                type="text"
+                                name="ocupacion">
+                        </div>
+
+
+                        <div class="campo">
+                            <label>Escolaridad</label>
+
+                            <select name="escolaridad">
+
+                                <option value="">
+                                    Seleccionar
+                                </option>
+
+                                <option>Primaria</option>
+                                <option>Secundaria</option>
+                                <option>Bachillerato</option>
+                                <option>Licenciatura</option>
+                                <option>Posgrado</option>
+                                <option>Otra</option>
+
+                            </select>
+                        </div>
+
+
+                        <div class="campo">
+
+                            <label>Estado civil</label>
+
+                            <select name="estado_civil">
+
+                                <option value="">
+                                    Seleccionar
+                                </option>
+
+                                <option>Soltero(a)</option>
+                                <option>Casado(a)</option>
+                                <option>Unión libre</option>
+                                <option>Divorciado(a)</option>
+                                <option>Viudo(a)</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="campo campo-completo">
+
+                            <label>Domicilio</label>
+
+                            <input
+                                type="text"
+                                name="domicilio"
+                                placeholder="Domicilio completo">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-card">
+
+                    <div class="titulo-seccion">
+
+                        <div class="numero-seccion">
+                            2
+                        </div>
+
+                        <div>
+                            <h3>Motivo de Consulta</h3>
+
+                            <p>
+                                Indica el motivo principal de la visita.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label>Motivo de consulta</label>
+
+                        <textarea
+                            name="motivo_consulta"
+                            rows="4"
+                            placeholder="Ejemplo: valoración general, dolor dental, limpieza..."></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="acciones-formulario">
+
+                    <a href="{{ url_for('dashboard') }}"
+                       class="btn-cancelar">
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn-guardar">
+
+                        Guardar Paciente
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

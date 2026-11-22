@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte {{ paciente.numero_historia }} | Clínica Dental</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reportes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+</head>
+<body class="reporte-paciente-body">
+<div class="contenedor">
+    {% set sidebar_extra_class = 'no-imprimir' %}
+    {% include 'componentes/sidebar.html' %}
+
+    <main class="principal reporte-paciente-principal">
+        <header class="header no-imprimir">
+            <div class="marca-header"><strong>Reporte clínico del paciente</strong><span>{{ paciente.numero_historia }}</span></div>
+            <div class="acciones-reporte-paciente">
+                <a href="{{ url_for('expediente_paciente', paciente_id=paciente.id) }}" class="btn-volver">← Ver expediente</a>
+                <button onclick="window.print()" class="btn-imprimir">🖨 Imprimir</button>
+            </div>
+        </header>
+
+        <section class="contenido hoja-reporte">
+            <div class="reporte-documento-header">
+                <div>
+                    <h1>Clínica Dental Dra. Rosa Elisa Arriaga</h1>
+                    <p>Reporte clínico de expediente</p>
+                </div>
+                <div class="reporte-emision">
+                    <strong>{{ paciente.numero_historia }}</strong>
+                    <span>Emitido: {{ fecha_emision.strftime('%d/%m/%Y %H:%M') }}</span>
+                </div>
+            </div>
+
+            <section class="seccion-reporte">
+                <div class="seccion-titulo"><span>01</span><h2>Datos del paciente</h2></div>
+                <div class="datos-grid">
+                    <div><small>Nombre</small><strong>{{ paciente.nombre }} {{ paciente.apellidos }}</strong></div>
+                    <div><small>Edad</small><strong>{{ edad if edad is not none else '—' }}{% if edad is not none %} años{% endif %}</strong></div>
+                    <div><small>Documento</small><strong>{{ paciente.documento_identidad or '—' }}</strong></div>
+                    <div><small>Teléfono</small><strong>{{ paciente.telefono or '—' }}</strong></div>
+                    <div><small>Correo</small><strong>{{ paciente.correo or '—' }}</strong></div>
+                    <div><small>Género</small><strong>{{ paciente.genero or '—' }}</strong></div>
+                    <div class="dato-ancho"><small>Domicilio</small><strong>{{ paciente.domicilio or '—' }}</strong></div>
+                    <div class="dato-ancho"><small>Motivo de consulta</small><strong>{{ paciente.motivo_consulta or '—' }}</strong></div>
+                </div>
+            </section>
+
+            <section class="seccion-reporte">
+                <div class="seccion-titulo"><span>02</span><h2>Antecedentes médicos</h2></div>
+                {% if antecedentes %}
+                <div class="datos-grid compacto">
+                    <div><small>Alergias</small><strong>{{ 'Sí' if antecedentes.alergias else 'No' }}</strong></div>
+                    <div><small>Diabetes</small><strong>{{ 'Sí' if antecedentes.diabetes else 'No' }}</strong></div>
+                    <div><small>Hipertensión</small><strong>{{ 'Sí' if antecedentes.hipertension else 'No' }}</strong></div>
+                    <div><small>Asma</small><strong>{{ 'Sí' if antecedentes.asma else 'No' }}</strong></div>
+                    <div><small>Tratamiento médico</small><strong>{{ 'Sí' if antecedentes.tratamiento_medico else 'No' }}</strong></div>
+                    <div><small>Embarazo</small><strong>{{ 'Sí' if antecedentes.embarazada else 'No' }}</strong></div>
+                    {% if antecedentes.detalle_alergias %}<div class="dato-ancho"><small>Detalle de alergias</small><strong>{{ antecedentes.detalle_alergias }}</strong></div>{% endif %}
+                    {% if antecedentes.detalle_tratamiento %}<div class="dato-ancho"><small>Tratamiento actual</small><strong>{{ antecedentes.detalle_tratamiento }}</strong></div>{% endif %}
+                    {% if antecedentes.otros_padecimientos %}<div class="dato-ancho"><small>Otros padecimientos</small><strong>{{ antecedentes.otros_padecimientos }}</strong></div>{% endif %}
+                </div>
+                {% else %}<p class="sin-datos">Sin antecedentes médicos registrados.</p>{% endif %}
+            </section>
+
+            <section class="seccion-reporte">
+                <div class="seccion-titulo"><span>03</span><h2>Hallazgos del odontograma</h2></div>
+                <div class="tabla-responsive">
+                    <table class="reporte-tabla documento-tabla">
+                        <thead><tr><th>Pieza</th><th>Superficie</th><th>Estado</th><th>Procedimiento</th><th>Observaciones</th></tr></thead>
+                        <tbody>
+                        {% for item in odontograma %}
+                            <tr><td>{{ item.numero_diente }}</td><td>{{ item.superficie }}</td><td>{{ item.estado }}</td><td>{{ item.procedimiento or '—' }}</td><td>{{ item.observaciones or '—' }}</td></tr>
+                        {% else %}<tr><td colspan="5" class="vacio-tabla">Sin hallazgos clínicos relevantes registrados.</td></tr>{% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="seccion-reporte">
+                <div class="seccion-titulo"><span>04</span><h2>Tratamientos</h2></div>
+                <div class="tabla-responsive">
+                    <table class="reporte-tabla documento-tabla">
+                        <thead><tr><th>Fecha</th><th>Pieza</th><th>Diagnóstico</th><th>Procedimiento</th><th>Estado</th></tr></thead>
+                        <tbody>
+                        {% for t in tratamientos %}
+                            <tr><td>{{ t.fecha_registro.strftime('%d/%m/%Y') }}</td><td>{{ t.numero_diente or '—' }}</td><td>{{ t.diagnostico }}</td><td>{{ t.procedimiento }}</td><td>{{ t.estado }}</td></tr>
+                        {% else %}<tr><td colspan="5" class="vacio-tabla">Sin tratamientos registrados.</td></tr>{% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="seccion-reporte">
+                <div class="seccion-titulo"><span>05</span><h2>Notas de evolución</h2></div>
+                {% for nota in notas %}
+                <article class="nota-reporte">
+                    <div class="nota-reporte-top"><strong>{{ nota.fecha.strftime('%d/%m/%Y %H:%M') }}</strong><span>{{ nota.numero_diente and ('Pieza ' ~ nota.numero_diente) or 'General' }}</span></div>
+                    <h3>{{ nota.procedimiento }}</h3>
+                    <p><b>Evolución:</b> {{ nota.evolucion }}</p>
+                    {% if nota.indicaciones %}<p><b>Indicaciones:</b> {{ nota.indicaciones }}</p>{% endif %}
+                    {% if nota.observaciones %}<p><b>Observaciones:</b> {{ nota.observaciones }}</p>{% endif %}
+                </article>
+                {% else %}<p class="sin-datos">Sin notas de evolución registradas.</p>{% endfor %}
+            </section>
+
+            <section class="seccion-reporte">
+                <div class="seccion-titulo"><span>06</span><h2>Consentimientos informados</h2></div>
+                <div class="tabla-responsive">
+                    <table class="reporte-tabla documento-tabla">
+                        <thead><tr><th>Fecha</th><th>Tipo</th><th>Procedimiento</th><th>Firma</th></tr></thead>
+                        <tbody>
+                        {% for c in consentimientos %}
+                            <tr><td>{{ c.fecha.strftime('%d/%m/%Y %H:%M') }}</td><td>{{ c.tipo }}</td><td>{{ c.procedimiento or '—' }}</td><td>{{ 'Firmado' if c.firmado_paciente else 'Pendiente' }}</td></tr>
+                        {% else %}<tr><td colspan="4" class="vacio-tabla">Sin consentimientos registrados.</td></tr>{% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="seccion-reporte">
+                <div class="seccion-titulo"><span>07</span><h2>Historial de citas</h2></div>
+                <div class="tabla-responsive">
+                    <table class="reporte-tabla documento-tabla">
+                        <thead><tr><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th></tr></thead>
+                        <tbody>
+                        {% for cita in citas %}
+                            <tr><td>{{ cita.fecha.strftime('%d/%m/%Y') }}</td><td>{{ cita.hora.strftime('%H:%M') }}</td><td>{{ cita.motivo }}</td><td>{{ cita.estado }}</td></tr>
+                        {% else %}<tr><td colspan="4" class="vacio-tabla">Sin citas registradas.</td></tr>{% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <footer class="reporte-firma-footer">
+                <div></div>
+                <div class="firma-doctora">
+                    <span></span>
+                    <strong>{{ datos_odontologa.nombre }}</strong>
+                    <small>Registro profesional: {{ datos_odontologa.registro_profesional }}</small>
+                </div>
+            </footer>
+        </section>
+    </main>
+</div>
+</body>
+</html>

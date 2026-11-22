@@ -1,0 +1,18 @@
+ACTUALIZACIÓN: CONSENTIMIENTO AUTOMÁTICO + FIRMA EN PANTALLA
+
+ORDEN IMPORTANTE
+1. En MySQL Workbench ejecuta primero el archivo 01_ACTUALIZAR_BD.sql.
+2. Reemplaza app.py en la carpeta principal del proyecto.
+3. Reemplaza models/consentimiento.py y models/__init__.py.
+4. Reemplaza templates/pacientes/expediente.html.
+5. Reemplaza static/css/pacientes.css.
+6. Conserva/copia la carpeta static/consentimientos con los 21 PDF reales.
+7. Reinicia Flask: Ctrl+C y luego python app.py.
+8. En Chrome usa Ctrl+F5.
+
+FUNCIONAMIENTO
+- En Odontograma o Plan de Tratamiento, al indicar pieza + procedimiento, aparece el consentimiento recomendado.
+- "Abrir / imprimir" abre el PDF oficial correspondiente.
+- "Firmar / registrar" abre la pestaña Consentimientos con el formato ya seleccionado y el procedimiento precargado.
+- El paciente puede firmar con mouse, touchpad o dedo en el recuadro de firma.
+- Si la firma se realiza solo en papel, el recuadro puede quedar vacío y se puede marcar la casilla de firmado manualmente.

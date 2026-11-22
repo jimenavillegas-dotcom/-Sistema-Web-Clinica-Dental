@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Clínica Dental</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    {% include 'componentes/sidebar.html' %}
+
+
+    <!-- =====================================================
+         CONTENIDO
+         ===================================================== -->
+
+    <main class="principal">
+
+        <header class="header">
+
+            <div>
+                <strong>Clínica Dental</strong>
+            </div>
+
+            <div class="usuario">
+                <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                <span>Odontóloga general</span>
+            </div>
+
+        </header>
+
+
+        <section class="contenido">
+
+            <div class="titulo-dashboard">
+
+                <h1>
+                    ¡Bienvenida, Dra. Rosa!
+                </h1>
+
+                <p>
+                    Aquí tienes un resumen de la actividad del consultorio.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 KPIs REALES
+                 ================================================= -->
+
+            <div class="kpis">
+
+                <div class="kpi">
+                    <div class="kpi-icono">
+                        👥
+                    </div>
+
+                    <div>
+                        <div class="numero">
+                            {{ total_pacientes }}
+                        </div>
+
+                        <div class="texto">
+                            Pacientes registrados
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="kpi">
+                    <div class="kpi-icono">
+                        📅
+                    </div>
+
+                    <div>
+                        <div class="numero">
+                            {{ total_citas_hoy }}
+                        </div>
+
+                        <div class="texto">
+                            Citas de hoy
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="kpi">
+                    <div class="kpi-icono">
+                        🩺
+                    </div>
+
+                    <div>
+                        <div class="numero">
+                            {{ tratamientos_en_curso }}
+                        </div>
+
+                        <div class="texto">
+                            Tratamientos en curso
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="kpi">
+                    <div class="kpi-icono">
+                        🗓️
+                    </div>
+
+                    <div>
+                        <div class="numero">
+                            {{ proximas_citas }}
+                        </div>
+
+                        <div class="texto">
+                            Próximas citas
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CALENDARIO + AGENDA
+                 ================================================= -->
+
+            <div class="dashboard-grid"
+                 id="seccion-citas">
+
+                <!-- CALENDARIO -->
+
+                <div>
+
+                    <div class="tarjeta tarjeta-calendario">
+
+                        <div class="tarjeta-encabezado">
+
+                            <div>
+                                <h3>
+                                    📅 Calendario de Citas
+                                </h3>
+
+                                <p>
+                                    Citas registradas en el sistema.
+                                </p>
+                            </div>
+
+                            <div class="calendario-controles">
+
+                                <button type="button"
+                                        class="btn-calendario"
+                                        id="calAnterior"
+                                        aria-label="Mes anterior">
+                                    ‹
+                                </button>
+
+                                <button type="button"
+                                        class="btn-calendario btn-hoy"
+                                        id="calHoy">
+                                    Hoy
+                                </button>
+
+                                <button type="button"
+                                        class="btn-calendario"
+                                        id="calSiguiente"
+                                        aria-label="Mes siguiente">
+                                    ›
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="calendario-titulo"
+                             id="calendarioTitulo">
+                        </div>
+
+                        <div class="calendario-semana">
+                            <span>Lun</span>
+                            <span>Mar</span>
+                            <span>Mié</span>
+                            <span>Jue</span>
+                            <span>Vie</span>
+                            <span>Sáb</span>
+                            <span>Dom</span>
+                        </div>
+
+                        <div class="calendario-real"
+                             id="calendarioReal">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AGENDA DEL DÍA -->
+
+                <div>
+
+                    <div class="tarjeta tarjeta-agenda">
+
+                        <div class="agenda-encabezado">
+
+                            <div>
+                                <h3>
+                                    Agenda del Día
+                                </h3>
+
+                                <p>
+                                    {{ hoy.strftime("%d/%m/%Y") }}
+                                </p>
+                            </div>
+
+                            <span class="agenda-contador">
+                                {{ total_citas_hoy }}
+                            </span>
+
+                        </div>
+
+                        {% if agenda_hoy %}
+
+                            <div class="agenda-lista">
+
+                                {% for cita in agenda_hoy %}
+
+                                    <a class="cita"
+                                       href="{{ url_for('expediente_paciente', paciente_id=cita.paciente_id, tab='citas', cita_id=cita.id) }}">
+
+                                        <div class="cita-superior">
+
+                                            <div class="hora">
+                                                {{ cita.hora.strftime("%H:%M") }} hrs
+                                            </div>
+
+                                            <span class="estado-cita estado-{{ cita.estado|lower|replace(' ', '-')|replace('ó', 'o') }}">
+                                                {{ cita.estado }}
+                                            </span>
+
+                                        </div>
+
+                                        <div class="paciente">
+                                            {{ cita.paciente.nombre }}
+                                            {{ cita.paciente.apellidos }}
+                                        </div>
+
+                                        <div class="procedimiento">
+                                            {{ cita.motivo }}
+                                        </div>
+
+                                        {% if cita.odontologo %}
+                                            <div class="odontologo-cita">
+                                                🩺 {{ cita.odontologo }}
+                                            </div>
+                                        {% endif %}
+
+                                    </a>
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="agenda-vacia">
+
+                                <div class="agenda-vacia-icono">
+                                    📭
+                                </div>
+
+                                <strong>
+                                    No hay citas para hoy
+                                </strong>
+
+                                <p>
+                                    Las citas programadas para este día
+                                    aparecerán aquí automáticamente.
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                        <a href="{{ url_for('pacientes') }}"
+                           class="boton">
+                            Programar nueva cita
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ACCIONES RÁPIDAS
+                 ================================================= -->
+
+            <div class="tarjeta">
+
+                <h3>
+                    ⚡ Acciones Rápidas
+                </h3>
+
+                <div class="acciones">
+
+                    <a href="{{ url_for('agenda_citas') }}"
+                       class="accion">
+
+                        <div class="accion-icono">
+                            📅
+                        </div>
+
+                        Nueva Cita
+
+                    </a>
+
+
+                    <a href="{{ url_for('nuevo_paciente') }}"
+                       class="accion">
+
+                        <div class="accion-icono">
+                            👤
+                        </div>
+
+                        Nuevo Paciente
+
+                    </a>
+
+
+                    <a href="{{ url_for('pacientes') }}"
+                       class="accion">
+
+                        <div class="accion-icono">
+                            🔍
+                        </div>
+
+                        Buscar Paciente
+
+                    </a>
+
+
+                    <a href="{{ url_for('pacientes') }}"
+                       class="accion">
+
+                        <div class="accion-icono">
+                            🗂
+                        </div>
+
+                        Expedientes
+
+                    </a>
+
+
+                    <a href="{{ url_for('reportes') }}"
+                       class="accion">
+
+                        <div class="accion-icono">
+                            📊
+                        </div>
+
+                        Reportes
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     DATOS DEL CALENDARIO
+     ========================================================= -->
+
+<script id="citasCalendarioDatos"
+        type="application/json">
+{{ citas_calendario | tojson }}
+</script>
+
+
+<!-- =========================================================
+     CALENDARIO INTERACTIVO
+     ========================================================= -->
+
+<script>
+    const datosCalendarioElemento =
+        document.getElementById("citasCalendarioDatos");
+
+    let citasCalendario = [];
+
+    if (datosCalendarioElemento) {
+        try {
+            citasCalendario = JSON.parse(
+                datosCalendarioElemento.textContent
+            );
+        } catch (error) {
+            console.error(
+                "No se pudieron cargar las citas del calendario.",
+                error
+            );
+        }
+    }
+
+
+    const calendarioReal =
+        document.getElementById("calendarioReal");
+
+    const calendarioTitulo =
+        document.getElementById("calendarioTitulo");
+
+    const botonAnterior =
+        document.getElementById("calAnterior");
+
+    const botonSiguiente =
+        document.getElementById("calSiguiente");
+
+    const botonHoy =
+        document.getElementById("calHoy");
+
+
+    const fechaActual = new Date();
+
+    let mesVisible = new Date(
+        fechaActual.getFullYear(),
+        fechaActual.getMonth(),
+        1
+    );
+
+
+    function normalizarEstado(estado) {
+        return (estado || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, "-");
+    }
+
+
+    function fechaLocalISO(fecha) {
+        const anio = fecha.getFullYear();
+        const mes = String(
+            fecha.getMonth() + 1
+        ).padStart(2, "0");
+
+        const dia = String(
+            fecha.getDate()
+        ).padStart(2, "0");
+
+        return `${anio}-${mes}-${dia}`;
+    }
+
+
+    function obtenerCitasDelDia(fechaISO) {
+        return citasCalendario.filter(
+            function (cita) {
+                return cita.fecha === fechaISO;
+            }
+        );
+    }
+
+
+    function crearEventoCalendario(cita) {
+
+        const enlace =
+            document.createElement("a");
+
+        enlace.className =
+            "evento-calendario estado-evento-" +
+            normalizarEstado(cita.estado);
+
+        enlace.href = cita.url;
+
+        enlace.title =
+            cita.hora + " · " +
+            cita.paciente + " · " +
+            cita.motivo;
+
+        const hora =
+            document.createElement("strong");
+
+        hora.textContent =
+            cita.hora;
+
+        const paciente =
+            document.createElement("span");
+
+        paciente.textContent =
+            cita.paciente;
+
+        enlace.appendChild(hora);
+        enlace.appendChild(paciente);
+
+        return enlace;
+    }
+
+
+    function renderizarCalendario() {
+
+        if (!calendarioReal || !calendarioTitulo) {
+            return;
+        }
+
+        calendarioReal.innerHTML = "";
+
+        const anio =
+            mesVisible.getFullYear();
+
+        const mes =
+            mesVisible.getMonth();
+
+        calendarioTitulo.textContent =
+            mesVisible.toLocaleDateString(
+                "es-MX",
+                {
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+        const primerDia =
+            new Date(
+                anio,
+                mes,
+                1
+            );
+
+        let desplazamiento =
+            primerDia.getDay() - 1;
+
+        if (desplazamiento < 0) {
+            desplazamiento = 6;
+        }
+
+        const inicio =
+            new Date(
+                anio,
+                mes,
+                1 - desplazamiento
+            );
+
+        for (let indice = 0; indice < 42; indice++) {
+
+            const fecha =
+                new Date(
+                    inicio.getFullYear(),
+                    inicio.getMonth(),
+                    inicio.getDate() + indice
+                );
+
+            const celda =
+                document.createElement("div");
+
+            celda.className =
+                "dia-calendario";
+
+            if (fecha.getMonth() !== mes) {
+                celda.classList.add(
+                    "dia-otro-mes"
+                );
+            }
+
+            if (
+                fecha.getFullYear() === fechaActual.getFullYear()
+                && fecha.getMonth() === fechaActual.getMonth()
+                && fecha.getDate() === fechaActual.getDate()
+            ) {
+                celda.classList.add(
+                    "dia-hoy"
+                );
+            }
+
+            const numero =
+                document.createElement("div");
+
+            numero.className =
+                "numero-dia";
+
+            numero.textContent =
+                fecha.getDate();
+
+            celda.appendChild(numero);
+
+            const fechaISO =
+                fechaLocalISO(fecha);
+
+            const citasDia =
+                obtenerCitasDelDia(
+                    fechaISO
+                );
+
+            const maximoVisible = 3;
+
+            citasDia
+                .slice(0, maximoVisible)
+                .forEach(
+                    function (cita) {
+                        celda.appendChild(
+                            crearEventoCalendario(
+                                cita
+                            )
+                        );
+                    }
+                );
+
+            if (citasDia.length > maximoVisible) {
+
+                const restante =
+                    document.createElement("div");
+
+                restante.className =
+                    "eventos-restantes";
+
+                restante.textContent =
+                    "+" +
+                    (citasDia.length - maximoVisible) +
+                    " más";
+
+                celda.appendChild(
+                    restante
+                );
+            }
+
+            calendarioReal.appendChild(
+                celda
+            );
+        }
+    }
+
+
+    if (botonAnterior) {
+        botonAnterior.addEventListener(
+            "click",
+            function () {
+                mesVisible = new Date(
+                    mesVisible.getFullYear(),
+                    mesVisible.getMonth() - 1,
+                    1
+                );
+
+                renderizarCalendario();
+            }
+        );
+    }
+
+
+    if (botonSiguiente) {
+        botonSiguiente.addEventListener(
+            "click",
+            function () {
+                mesVisible = new Date(
+                    mesVisible.getFullYear(),
+                    mesVisible.getMonth() + 1,
+                    1
+                );
+
+                renderizarCalendario();
+            }
+        );
+    }
+
+
+    if (botonHoy) {
+        botonHoy.addEventListener(
+            "click",
+            function () {
+                mesVisible = new Date(
+                    fechaActual.getFullYear(),
+                    fechaActual.getMonth(),
+                    1
+                );
+
+                renderizarCalendario();
+            }
+        );
+    }
+
+
+    renderizarCalendario();
+</script>
+
+</body>
+</html>

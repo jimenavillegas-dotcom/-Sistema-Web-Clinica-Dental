@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expedientes | Clínica Dental Dra. Rosa Elisa Arriaga</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/expedientes.css') }}">
+</head>
+<body>
+<div class="contenedor">
+    {% include 'componentes/sidebar.html' %}
+
+    <main class="principal">
+        <header class="header">
+            <div class="marca-seccion">
+                <strong>Expedientes clínicos</strong>
+                <span>Búsqueda y consulta directa</span>
+            </div>
+            <div class="usuario">
+                <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                <span>Odontóloga general</span>
+            </div>
+        </header>
+
+        <section class="contenido expedientes-contenido">
+            <div class="encabezado-expedientes">
+                <div>
+                    <span class="eyebrow">Archivo clínico digital</span>
+                    <h1>Expedientes de pacientes</h1>
+                    <p>Localiza rápidamente un expediente y abre directamente la sección clínica que necesites.</p>
+                </div>
+                <a href="{{ url_for('nuevo_paciente') }}" class="btn-principal">+ Nuevo paciente</a>
+            </div>
+
+            <div class="resumen-expedientes">
+                <div class="resumen-card">
+                    <span>Total</span>
+                    <strong>{{ total }}</strong>
+                    <small>expedientes registrados</small>
+                </div>
+                <div class="resumen-card">
+                    <span>Activos</span>
+                    <strong>{{ total_activos }}</strong>
+                    <small>pacientes en seguimiento</small>
+                </div>
+                <div class="resumen-card">
+                    <span>Inactivos</span>
+                    <strong>{{ total_inactivos }}</strong>
+                    <small>expedientes conservados</small>
+                </div>
+            </div>
+
+            <form class="busqueda-expedientes" method="get" action="{{ url_for('expedientes') }}">
+                <div class="campo-busqueda">
+                    <span>🔍</span>
+                    <input type="search" name="q" value="{{ q }}"
+                           placeholder="Buscar por nombre, expediente, identificación, teléfono o correo..."
+                           autocomplete="off">
+                </div>
+                <select name="estado" aria-label="Filtrar por estado">
+                    <option value="todos" {{ 'selected' if estado == 'todos' else '' }}>Todos</option>
+                    <option value="activos" {{ 'selected' if estado == 'activos' else '' }}>Activos</option>
+                    <option value="inactivos" {{ 'selected' if estado == 'inactivos' else '' }}>Inactivos</option>
+                </select>
+                <button type="submit" class="btn-buscar">Buscar</button>
+                {% if q or estado != 'todos' %}
+                <a href="{{ url_for('expedientes') }}" class="btn-limpiar">Limpiar</a>
+                {% endif %}
+            </form>
+
+            <div class="resultado-cabecera">
+                <strong>{{ pacientes|length }}</strong>
+                <span>{{ 'resultado' if pacientes|length == 1 else 'resultados' }}</span>
+                {% if q %}<span class="criterio">para “{{ q }}”</span>{% endif %}
+            </div>
+
+            {% if pacientes %}
+            <div class="tabla-expedientes-card">
+                <div class="tabla-scroll">
+                    <table class="tabla-expedientes">
+                        <thead>
+                            <tr>
+                                <th>Expediente</th>
+                                <th>Paciente</th>
+                                <th>Identificación</th>
+                                <th>Contacto</th>
+                                <th>Estado</th>
+                                <th>Acciones clínicas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for paciente in pacientes %}
+                            <tr>
+                                <td><span class="folio">{{ paciente.numero_historia }}</span></td>
+                                <td>
+                                    <div class="paciente-nombre">{{ paciente.nombre }} {{ paciente.apellidos }}</div>
+                                    <small>{{ paciente.correo or 'Sin correo registrado' }}</small>
+                                </td>
+                                <td>{{ paciente.documento_identidad or '—' }}</td>
+                                <td>{{ paciente.telefono or '—' }}</td>
+                                <td>
+                                    <span class="estado-badge {{ 'activo' if paciente.activo else 'inactivo' }}">
+                                        {{ 'Activo' if paciente.activo else 'Inactivo' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="acciones-expediente">
+                                        <a class="accion principal" href="{{ url_for('expediente_paciente', paciente_id=paciente.id, origen='expedientes') }}">Abrir expediente</a>
+                                        <a class="accion" href="{{ url_for('expediente_paciente', paciente_id=paciente.id, tab='odontograma', origen='expedientes') }}">Odontograma</a>
+                                        <a class="accion" href="{{ url_for('expediente_paciente', paciente_id=paciente.id, tab='tratamiento', origen='expedientes') }}">Tratamientos</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="estado-vacio">
+                <div class="icono">🗂️</div>
+                <h2>No encontramos expedientes</h2>
+                <p>Prueba con otro nombre, número de expediente o identificación.</p>
+                <a href="{{ url_for('expedientes') }}" class="btn-principal">Ver todos los expedientes</a>
+            </div>
+            {% endif %}
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+@echo off
+title Instalacion - Clinica Dental Dra. Rosa Elisa Arriaga
+cd /d "%~dp0"
+
+echo ================================================
+echo   CLINICA DENTAL DRA. ROSA ELISA ARRIAGA
+echo           INSTALACION DEL SISTEMA
+echo ================================================
+echo.
+
+echo Verificando Python...
+python --version >nul 2>&1
+
+if errorlevel 1 (
+    echo.
+    echo ERROR: Python no esta instalado.
+    echo.
+    echo Instala Python 3.12 y marca la opcion:
+    echo "Add Python to PATH"
+    echo.
+    pause
+    exit /b
+)
+
+echo Python encontrado.
+echo.
+
+if not exist "venv\Scripts\python.exe" (
+    echo Creando entorno virtual...
+    python -m venv venv
+
+    if errorlevel 1 (
+        echo.
+        echo ERROR: No se pudo crear el entorno virtual.
+        pause
+        exit /b
+    )
+) else (
+    echo El entorno virtual ya existe.
+)
+
+echo.
+echo Actualizando pip...
+venv\Scripts\python.exe -m pip install --upgrade pip
+
+echo.
+echo Instalando dependencias del sistema...
+venv\Scripts\python.exe -m pip install -r requirements.txt
+
+echo.
+echo Instalando componentes adicionales...
+venv\Scripts\python.exe -m pip install PyMuPDF waitress
+
+echo.
+echo ================================================
+echo        INSTALACION DE PYTHON COMPLETADA
+echo ================================================
+echo.
+echo El sistema ya tiene:
+echo - Entorno virtual
+echo - Flask y dependencias
+echo - PyMuPDF
+echo - Waitress
+echo.
+echo Aun falta configurar MySQL y cargar la base
+echo de datos del consultorio.
+echo.
+pause

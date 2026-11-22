@@ -1,0 +1,11 @@
+ACTUALIZACIÓN DE CONSENTIMIENTOS REALES
+
+Reemplazar:
+- app.py -> Consultorio_dental\app.py
+- expediente.html -> Consultorio_dental\templates\pacientes\expediente.html
+- pacientes.css -> Consultorio_dental\static\css\pacientes.css
+
+Copiar la carpeta completa:
+- static\consentimientos -> Consultorio_dental\static\consentimientos
+
+Después reiniciar Flask y hacer Ctrl+F5.

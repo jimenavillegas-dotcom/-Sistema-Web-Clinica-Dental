@@ -1,0 +1,769 @@
+/* =========================================================
+   CLÍNICA DENTAL DRA. ROSA ELISA ARRIAGA
+   Dashboard - identidad visual del consultorio
+   ========================================================= */
+
+:root {
+    --rosa: #b72b6b;
+    --rosa-oscuro: #7f1f4d;
+    --rosa-suave: #fbeaf2;
+    --turquesa: #19b8b5;
+    --turquesa-oscuro: #108d91;
+    --turquesa-suave: #e8f9f8;
+    --verde: #3f9a61;
+    --negro: #09090b;
+    --negro-suave: #17171b;
+    --gris-texto: #626a76;
+    --gris-claro: #eef1f4;
+    --borde: #e5e7eb;
+    --fondo: #f7f6f8;
+    --blanco: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--fondo);
+    color: #22242a;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+.contenedor {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, #060607 0%, #131317 100%);
+    color: var(--blanco);
+    padding: 20px 18px 24px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.logo-img {
+    width: 100%;
+    max-width: 205px;
+    height: auto;
+    display: block;
+    margin: 0 auto 7px;
+    object-fit: contain;
+}
+
+.logo-identidad {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 11px;
+}
+
+.logo-identidad span {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+.logo-identidad small {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #b9bdc5;
+    line-height: 1.35;
+}
+
+.menu a {
+    display: block;
+    text-decoration: none;
+    color: #d8d9de;
+    padding: 12px 14px;
+    margin-bottom: 6px;
+    border-radius: 10px;
+    border-left: 3px solid transparent;
+    transition: 0.2s ease;
+}
+
+.menu a:hover {
+    background: rgba(25, 184, 181, 0.11);
+    color: #ffffff;
+    border-left-color: var(--turquesa);
+}
+
+.menu a.activo {
+    background: linear-gradient(90deg, rgba(183, 43, 107, 0.92), rgba(127, 31, 77, 0.88));
+    color: #ffffff;
+    border-left-color: var(--turquesa);
+    box-shadow: 0 6px 18px rgba(183, 43, 107, 0.18);
+}
+
+.salir {
+    position: absolute;
+    bottom: 24px;
+    left: 18px;
+    right: 18px;
+}
+
+.salir a {
+    display: block;
+    text-decoration: none;
+    color: #f0f0f2;
+    padding: 11px;
+    border: 1px solid #3c3c43;
+    border-radius: 9px;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.salir a:hover {
+    border-color: var(--rosa);
+    color: #ffffff;
+    background: rgba(183, 43, 107, 0.12);
+}
+
+/* =========================================================
+   CONTENIDO
+   ========================================================= */
+
+.principal {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-width: 0;
+}
+
+.header {
+    min-height: 76px;
+    background: rgba(255, 255, 255, 0.97);
+    border-bottom: 1px solid var(--borde);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(17, 17, 22, 0.025);
+}
+
+.marca-header strong {
+    display: block;
+    color: var(--rosa-oscuro);
+    font-size: 17px;
+}
+
+.marca-header span {
+    display: block;
+    margin-top: 3px;
+    color: var(--gris-texto);
+    font-size: 12px;
+}
+
+.usuario {
+    text-align: right;
+}
+
+.usuario strong {
+    display: block;
+    color: #25262b;
+}
+
+.usuario span {
+    font-size: 13px;
+    color: var(--turquesa-oscuro);
+}
+
+.contenido {
+    padding: 30px 35px;
+}
+
+.titulo-dashboard h1 {
+    font-size: 27px;
+    margin-bottom: 6px;
+    color: #222228;
+}
+
+.titulo-dashboard h1::after {
+    content: "";
+    display: block;
+    width: 62px;
+    height: 3px;
+    margin-top: 9px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--rosa), var(--turquesa));
+}
+
+.titulo-dashboard p {
+    color: #737985;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+/* =========================================================
+   KPIs
+   ========================================================= */
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.kpi {
+    position: relative;
+    overflow: hidden;
+    background: var(--blanco);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--borde);
+    box-shadow: 0 5px 18px rgba(18, 19, 24, 0.035);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.kpi::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--rosa);
+}
+
+.kpi:nth-child(even)::before {
+    background: var(--turquesa);
+}
+
+.kpi-icono {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rosa-suave);
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.kpi:nth-child(even) .kpi-icono {
+    background: var(--turquesa-suave);
+}
+
+.kpi .numero {
+    font-size: 29px;
+    font-weight: bold;
+    color: #28282d;
+    margin-bottom: 3px;
+}
+
+.kpi .texto {
+    color: #707683;
+    font-size: 14px;
+}
+
+/* =========================================================
+   ZONA CENTRAL
+   ========================================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.tarjeta {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(20, 20, 25, 0.025);
+}
+
+.tarjeta h3 {
+    margin: 0;
+    color: #2b2b31;
+}
+
+.tarjeta-encabezado {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.tarjeta-encabezado p,
+.agenda-encabezado p {
+    margin-top: 5px;
+    color: #7a808b;
+    font-size: 13px;
+}
+
+/* =========================================================
+   CALENDARIO
+   ========================================================= */
+
+.calendario-controles {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+}
+
+.btn-calendario {
+    min-width: 34px;
+    height: 34px;
+    border: 1px solid #dedfe4;
+    background: #ffffff;
+    color: #34343b;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.btn-calendario:hover {
+    border-color: var(--rosa);
+    color: var(--rosa-oscuro);
+    background: var(--rosa-suave);
+}
+
+.btn-hoy {
+    padding: 0 11px;
+}
+
+.calendario-titulo {
+    text-transform: capitalize;
+    text-align: center;
+    font-weight: bold;
+    font-size: 17px;
+    color: #303038;
+    margin-bottom: 12px;
+}
+
+.calendario-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #faf8fa;
+    border: 1px solid #e8e4e8;
+    border-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+}
+
+.calendario-semana span {
+    padding: 9px 4px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #77727a;
+}
+
+.calendario-real {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    border-left: 1px solid #e8e4e8;
+    border-top: 1px solid #e8e4e8;
+}
+
+.dia-calendario {
+    min-height: 105px;
+    padding: 7px;
+    border-right: 1px solid #e8e4e8;
+    border-bottom: 1px solid #e8e4e8;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.dia-calendario:nth-last-child(-n + 7):first-child,
+.dia-calendario:last-child {
+    border-radius: 0;
+}
+
+.numero-dia {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #45454d;
+    margin-bottom: 5px;
+}
+
+.dia-otro-mes {
+    background: #fbfafb;
+}
+
+.dia-otro-mes .numero-dia {
+    color: #b6b1b7;
+}
+
+.dia-hoy .numero-dia {
+    border-radius: 50%;
+    background: var(--rosa);
+    color: white;
+    box-shadow: 0 3px 10px rgba(183, 43, 107, 0.25);
+}
+
+.evento-calendario {
+    display: block;
+    text-decoration: none;
+    padding: 4px 6px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    background: var(--turquesa-suave);
+    border-left: 3px solid var(--turquesa);
+    color: #155d60;
+    overflow: hidden;
+}
+
+.evento-calendario strong {
+    display: inline;
+    font-size: 10px;
+    margin-right: 3px;
+}
+
+.evento-calendario span {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.evento-calendario:hover {
+    background: #dff5f4;
+}
+
+.estado-evento-atendida {
+    background: #ecfdf5;
+    border-left-color: #10b981;
+    color: #166534;
+}
+
+.estado-evento-cancelada,
+.estado-evento-no-asistio {
+    background: #fef2f2;
+    border-left-color: #ef4444;
+    color: #991b1b;
+}
+
+.estado-evento-confirmada {
+    background: var(--rosa-suave);
+    border-left-color: var(--rosa);
+    color: var(--rosa-oscuro);
+}
+
+.eventos-restantes {
+    color: #716b73;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 4px;
+}
+
+/* =========================================================
+   AGENDA DEL DÍA
+   ========================================================= */
+
+.tarjeta-agenda {
+    min-height: 100%;
+}
+
+.agenda-encabezado {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.agenda-contador {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 9px;
+    border-radius: 999px;
+    background: var(--rosa-suave);
+    color: var(--rosa-oscuro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.agenda-lista {
+    max-height: 470px;
+    overflow-y: auto;
+    padding-right: 3px;
+}
+
+.cita {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 14px 0;
+    border-bottom: 1px solid #efedf0;
+}
+
+.cita:hover .paciente {
+    color: var(--rosa);
+}
+
+.cita-superior {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+}
+
+.cita .hora {
+    color: var(--turquesa-oscuro);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.cita .paciente {
+    font-weight: bold;
+    margin-top: 5px;
+    transition: 0.2s;
+}
+
+.cita .procedimiento {
+    color: #74717a;
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+.odontologo-cita {
+    margin-top: 5px;
+    color: #76717a;
+    font-size: 12px;
+}
+
+.estado-cita {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #c2410c;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.estado-confirmada {
+    background: var(--rosa-suave);
+    color: var(--rosa-oscuro);
+}
+
+.estado-atendida {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.estado-cancelada,
+.estado-no-asistio {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.agenda-vacia {
+    padding: 42px 15px;
+    text-align: center;
+    color: #79747d;
+}
+
+.agenda-vacia-icono {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.agenda-vacia strong {
+    display: block;
+    color: #3f3c43;
+    margin-bottom: 6px;
+}
+
+.agenda-vacia p {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.boton {
+    display: inline-block;
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--rosa), var(--rosa-oscuro));
+    color: white;
+    border-radius: 9px;
+    padding: 11px 17px;
+    margin-top: 15px;
+    box-shadow: 0 5px 14px rgba(183, 43, 107, 0.18);
+    transition: 0.2s;
+}
+
+.boton:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #c33476, #8d2457);
+}
+
+/* =========================================================
+   ACCIONES RÁPIDAS
+   ========================================================= */
+
+.acciones {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.accion {
+    text-decoration: none;
+    text-align: center;
+    background: #fbfafb;
+    color: #333139;
+    padding: 18px 10px;
+    border-radius: 11px;
+    border: 1px solid #e7e3e8;
+    transition: 0.2s;
+}
+
+.accion:hover {
+    background: var(--rosa-suave);
+    border-color: #dfa2bf;
+    color: var(--rosa-oscuro);
+    transform: translateY(-2px);
+}
+
+.accion:nth-child(even):hover {
+    background: var(--turquesa-suave);
+    border-color: #8bd7d5;
+    color: #116f72;
+}
+
+.accion-icono {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1150px) {
+    .kpis {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 850px) {
+    .sidebar {
+        width: 215px;
+    }
+
+    .principal {
+        margin-left: 215px;
+        width: calc(100% - 215px);
+    }
+
+    .contenido,
+    .header {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+
+    .acciones {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .logo-img {
+        max-width: 175px;
+    }
+}
+
+@media (max-width: 680px) {
+    .sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .salir {
+        position: static;
+        margin-top: 20px;
+    }
+
+    .contenedor {
+        display: block;
+    }
+
+    .principal {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .header {
+        position: static;
+    }
+
+    .kpis {
+        grid-template-columns: 1fr;
+    }
+
+    .tarjeta-encabezado {
+        flex-direction: column;
+    }
+
+    .dia-calendario {
+        min-height: 82px;
+        padding: 4px;
+    }
+
+    .evento-calendario span {
+        display: none;
+    }
+
+    .acciones {
+        grid-template-columns: 1fr;
+    }
+
+    .logo-img {
+        max-width: 210px;
+    }
+}

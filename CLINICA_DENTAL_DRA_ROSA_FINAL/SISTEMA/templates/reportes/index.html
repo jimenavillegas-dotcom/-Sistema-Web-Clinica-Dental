@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes | Clínica Dental</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reportes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+</head>
+<body>
+<div class="contenedor">
+    {% include 'componentes/sidebar.html' %}
+
+    <main class="principal">
+        <header class="header">
+            <div class="marca-header">
+                <strong>Reportes clínicos</strong>
+                <span>Resumen de actividad y seguimiento del consultorio</span>
+            </div>
+            <div class="usuario">
+                <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                <span>Odontóloga general</span>
+            </div>
+        </header>
+
+        <section class="contenido reportes-contenido">
+            <div class="reportes-encabezado">
+                <div>
+                    <span class="reportes-kicker">SEGUIMIENTO CLÍNICO</span>
+                    <h1>Reportes</h1>
+                    <p>Consulta indicadores del consultorio y genera un resumen individual por paciente.</p>
+                </div>
+                <button class="btn-imprimir" type="button" onclick="window.print()">🖨 Imprimir resumen</button>
+            </div>
+
+            <form class="reporte-filtros" method="GET" action="{{ url_for('reportes') }}">
+                <div class="campo-filtro">
+                    <label for="fecha_inicio">Desde</label>
+                    <input id="fecha_inicio" type="date" name="fecha_inicio" value="{{ fecha_inicio }}">
+                </div>
+                <div class="campo-filtro">
+                    <label for="fecha_fin">Hasta</label>
+                    <input id="fecha_fin" type="date" name="fecha_fin" value="{{ fecha_fin }}">
+                </div>
+                <div class="filtros-acciones">
+                    <button type="submit" class="btn-filtrar">Aplicar periodo</button>
+                    <a href="{{ url_for('reportes') }}" class="btn-limpiar">Ver todo</a>
+                </div>
+            </form>
+
+            {% if fecha_inicio or fecha_fin %}
+            <div class="periodo-activo">
+                Periodo consultado:
+                <strong>{{ fecha_inicio if fecha_inicio else 'Inicio de registros' }}</strong>
+                a
+                <strong>{{ fecha_fin if fecha_fin else 'Hoy' }}</strong>
+            </div>
+            {% endif %}
+
+            <div class="indicadores-grid">
+                <article class="indicador-card">
+                    <span>Pacientes activos</span>
+                    <strong>{{ resumen.pacientes_activos }}</strong>
+                    <small>Expedientes disponibles</small>
+                </article>
+                <article class="indicador-card">
+                    <span>Citas</span>
+                    <strong>{{ resumen.citas }}</strong>
+                    <small>En el periodo seleccionado</small>
+                </article>
+                <article class="indicador-card">
+                    <span>Tratamientos</span>
+                    <strong>{{ resumen.tratamientos }}</strong>
+                    <small>{{ resumen.tratamientos_completados }} completados</small>
+                </article>
+                <article class="indicador-card">
+                    <span>Notas de evolución</span>
+                    <strong>{{ resumen.notas }}</strong>
+                    <small>Seguimientos clínicos</small>
+                </article>
+                <article class="indicador-card">
+                    <span>Consentimientos</span>
+                    <strong>{{ resumen.consentimientos }}</strong>
+                    <small>{{ resumen.consentimientos_firmados }} firmados</small>
+                </article>
+            </div>
+
+            <div class="reportes-dos-columnas">
+                <article class="reporte-card">
+                    <div class="card-titulo">
+                        <div>
+                            <span>AGENDA</span>
+                            <h2>Citas por estado</h2>
+                        </div>
+                    </div>
+                    <div class="estado-lista">
+                        {% for estado, cantidad in citas_por_estado.items() %}
+                        <div class="estado-fila">
+                            <div><span class="estado-punto"></span>{{ estado }}</div>
+                            <strong>{{ cantidad }}</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+
+                <article class="reporte-card">
+                    <div class="card-titulo">
+                        <div>
+                            <span>PLAN CLÍNICO</span>
+                            <h2>Tratamientos por estado</h2>
+                        </div>
+                    </div>
+                    <div class="estado-lista">
+                        {% for estado, cantidad in tratamientos_por_estado.items() %}
+                        <div class="estado-fila">
+                            <div><span class="estado-punto turquesa"></span>{{ estado }}</div>
+                            <strong>{{ cantidad }}</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+            </div>
+
+            <div class="reportes-dos-columnas">
+                <article class="reporte-card">
+                    <div class="card-titulo">
+                        <div>
+                            <span>PROCEDIMIENTOS</span>
+                            <h2>Más registrados</h2>
+                        </div>
+                    </div>
+                    {% if procedimientos_frecuentes %}
+                    <div class="procedimientos-lista">
+                        {% for procedimiento, cantidad in procedimientos_frecuentes %}
+                        <div class="procedimiento-fila">
+                            <span>{{ procedimiento }}</span>
+                            <strong>{{ cantidad }}</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="vacio">No hay tratamientos registrados en este periodo.</div>
+                    {% endif %}
+                </article>
+
+                <article class="reporte-card reporte-paciente-card">
+                    <div class="card-titulo">
+                        <div>
+                            <span>EXPEDIENTE</span>
+                            <h2>Reporte individual del paciente</h2>
+                        </div>
+                    </div>
+                    <p>Selecciona un paciente para generar un resumen clínico imprimible con tratamientos, citas, odontograma, notas y consentimientos.</p>
+                    <label for="paciente_reporte">Paciente</label>
+                    <select id="paciente_reporte">
+                        <option value="">Seleccionar paciente</option>
+                        {% for paciente in pacientes %}
+                        <option value="{{ url_for('reporte_paciente', paciente_id=paciente.id) }}">
+                            {{ paciente.numero_historia }} · {{ paciente.nombre }} {{ paciente.apellidos }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn-generar" onclick="abrirReportePaciente()">Generar reporte</button>
+                </article>
+            </div>
+
+            <article class="reporte-card tabla-card">
+                <div class="card-titulo">
+                    <div>
+                        <span>ACTIVIDAD RECIENTE</span>
+                        <h2>Últimas citas</h2>
+                    </div>
+                    <a href="{{ url_for('agenda_citas') }}">Ver agenda completa</a>
+                </div>
+                <div class="tabla-responsive">
+                    <table class="reporte-tabla">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th><th>Paciente</th><th>Motivo</th><th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cita in citas %}
+                            <tr>
+                                <td>{{ cita.fecha.strftime('%d/%m/%Y') }} · {{ cita.hora.strftime('%H:%M') }}</td>
+                                <td>{{ cita.paciente.nombre }} {{ cita.paciente.apellidos }}</td>
+                                <td>{{ cita.motivo }}</td>
+                                <td><span class="badge">{{ cita.estado }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" class="vacio-tabla">No hay citas en el periodo seleccionado.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <article class="reporte-card tabla-card">
+                <div class="card-titulo">
+                    <div>
+                        <span>PLAN DE TRATAMIENTO</span>
+                        <h2>Últimos tratamientos registrados</h2>
+                    </div>
+                </div>
+                <div class="tabla-responsive">
+                    <table class="reporte-tabla">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th><th>Paciente</th><th>Pieza</th><th>Procedimiento</th><th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tratamiento in tratamientos %}
+                            <tr>
+                                <td>{{ tratamiento.fecha_registro.strftime('%d/%m/%Y') }}</td>
+                                <td>{{ tratamiento.paciente.nombre }} {{ tratamiento.paciente.apellidos }}</td>
+                                <td>{{ tratamiento.numero_diente or '—' }}</td>
+                                <td>{{ tratamiento.procedimiento }}</td>
+                                <td><span class="badge turquesa-badge">{{ tratamiento.estado }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="5" class="vacio-tabla">No hay tratamientos en el periodo seleccionado.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
+<script>
+function abrirReportePaciente() {
+    const select = document.getElementById('paciente_reporte');
+    if (!select.value) {
+        alert('Selecciona un paciente para generar su reporte.');
+        return;
+    }
+    window.location.href = select.value;
+}
+</script>
+</body>
+</html>

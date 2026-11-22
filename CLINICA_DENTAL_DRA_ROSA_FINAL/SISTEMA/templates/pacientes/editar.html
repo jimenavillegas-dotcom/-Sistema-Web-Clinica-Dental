@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar paciente | Clínica Dental</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pacientes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+</head>
+<body>
+<div class="contenedor">
+    {% include 'componentes/sidebar.html' %}
+
+    <main class="principal">
+        <header class="header">
+            <div>
+                <strong>Editar paciente</strong>
+            </div>
+            <div class="usuario">
+                <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                <span>Odontóloga general</span>
+            </div>
+        </header>
+
+        <section class="contenido">
+            <div class="encabezado-pagina">
+                <div>
+                    <h1>Actualizar datos del paciente</h1>
+                    <p>
+                        Modifica únicamente la información general. El expediente clínico,
+                        odontograma, tratamientos, citas, notas y consentimientos se conservan.
+                    </p>
+                </div>
+                <a href="{{ url_for('expediente_paciente', paciente_id=paciente.id) }}"
+                   class="btn-secundario">← Volver al expediente</a>
+            </div>
+
+            {% with mensajes = get_flashed_messages() %}
+                {% if mensajes %}
+                    {% for mensaje in mensajes %}
+                        <div class="mensaje-exito">{{ mensaje }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="form-card">
+                <div class="titulo-seccion">
+                    <div class="numero-seccion">✓</div>
+                    <div>
+                        <h3>Expediente protegido</h3>
+                        <p>
+                            Número de expediente: <strong>{{ paciente.numero_historia }}</strong>.
+                            Este número no se modifica al actualizar los datos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST">
+                <div class="form-card">
+                    <div class="titulo-seccion">
+                        <div class="numero-seccion">1</div>
+                        <div>
+                            <h3>Datos generales</h3>
+                            <p>Información personal y de contacto del paciente.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="campo">
+                            <label>Nombre *</label>
+                            <input type="text" name="nombre"
+                                   value="{{ request.form.get('nombre', paciente.nombre or '') }}"
+                                   required>
+                        </div>
+
+                        <div class="campo">
+                            <label>Apellidos *</label>
+                            <input type="text" name="apellidos"
+                                   value="{{ request.form.get('apellidos', paciente.apellidos or '') }}"
+                                   required>
+                        </div>
+
+                        <div class="campo">
+                            <label>Fecha de nacimiento *</label>
+                            <input type="date" name="fecha_nacimiento"
+                                   value="{{ request.form.get('fecha_nacimiento', paciente.fecha_nacimiento.strftime('%Y-%m-%d') if paciente.fecha_nacimiento else '') }}"
+                                   required>
+                        </div>
+
+                        <div class="campo">
+                            <label>Género *</label>
+                            {% set genero_actual = request.form.get('genero', paciente.genero or '') %}
+                            <select name="genero" required>
+                                <option value="">Seleccionar</option>
+                                <option value="Femenino" {% if genero_actual == 'Femenino' %}selected{% endif %}>Femenino</option>
+                                <option value="Masculino" {% if genero_actual == 'Masculino' %}selected{% endif %}>Masculino</option>
+                                <option value="Otro" {% if genero_actual == 'Otro' %}selected{% endif %}>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="campo">
+                            <label>Documento de identidad</label>
+                            <input type="text" name="documento_identidad"
+                                   value="{{ request.form.get('documento_identidad', paciente.documento_identidad or '') }}"
+                                   placeholder="CURP, INE u otro">
+                        </div>
+
+                        <div class="campo">
+                            <label>Lugar de nacimiento</label>
+                            <input type="text" name="lugar_nacimiento"
+                                   value="{{ request.form.get('lugar_nacimiento', paciente.lugar_nacimiento or '') }}"
+                                   placeholder="Ciudad / Estado">
+                        </div>
+
+                        <div class="campo">
+                            <label>Teléfono</label>
+                            <input type="text" name="telefono"
+                                   value="{{ request.form.get('telefono', paciente.telefono or '') }}"
+                                   placeholder="55 1234 5678">
+                        </div>
+
+                        <div class="campo">
+                            <label>Correo electrónico</label>
+                            <input type="email" name="correo"
+                                   value="{{ request.form.get('correo', paciente.correo or '') }}"
+                                   placeholder="correo@ejemplo.com">
+                        </div>
+
+                        <div class="campo">
+                            <label>Ocupación</label>
+                            <input type="text" name="ocupacion"
+                                   value="{{ request.form.get('ocupacion', paciente.ocupacion or '') }}">
+                        </div>
+
+                        <div class="campo">
+                            <label>Escolaridad</label>
+                            {% set escolaridad_actual = request.form.get('escolaridad', paciente.escolaridad or '') %}
+                            <select name="escolaridad">
+                                <option value="">Seleccionar</option>
+                                {% for opcion in ['Primaria', 'Secundaria', 'Bachillerato', 'Licenciatura', 'Posgrado', 'Otra'] %}
+                                    <option value="{{ opcion }}" {% if escolaridad_actual == opcion %}selected{% endif %}>{{ opcion }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="campo">
+                            <label>Estado civil</label>
+                            {% set estado_civil_actual = request.form.get('estado_civil', paciente.estado_civil or '') %}
+                            <select name="estado_civil">
+                                <option value="">Seleccionar</option>
+                                {% for opcion in ['Soltero(a)', 'Casado(a)', 'Unión libre', 'Divorciado(a)', 'Viudo(a)'] %}
+                                    <option value="{{ opcion }}" {% if estado_civil_actual == opcion %}selected{% endif %}>{{ opcion }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="campo campo-completo">
+                            <label>Domicilio</label>
+                            <input type="text" name="domicilio"
+                                   value="{{ request.form.get('domicilio', paciente.domicilio or '') }}"
+                                   placeholder="Domicilio completo">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <div class="titulo-seccion">
+                        <div class="numero-seccion">2</div>
+                        <div>
+                            <h3>Motivo de consulta y estado</h3>
+                            <p>Actualiza el motivo general o el estado del registro cuando sea necesario.</p>
+                        </div>
+                    </div>
+
+                    <div class="campo">
+                        <label>Motivo de consulta</label>
+                        <textarea name="motivo_consulta" rows="4"
+                                  placeholder="Motivo principal de consulta">{{ request.form.get('motivo_consulta', paciente.motivo_consulta or '') }}</textarea>
+                    </div>
+
+                    <div class="campo" style="margin-top: 18px;">
+                        <label class="opcion-check" style="max-width: 420px;">
+                            <input type="checkbox" name="activo"
+                                   {% if (request.method == 'POST' and request.form.get('activo') == 'on') or (request.method != 'POST' and paciente.activo) %}checked{% endif %}>
+                            Paciente activo en el consultorio
+                        </label>
+                        <small style="display:block;margin-top:8px;color:#6b7280;">
+                            Desmárcalo únicamente si deseas conservar el expediente pero indicar que el paciente ya no está activo.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="acciones-formulario">
+                    <a href="{{ url_for('expediente_paciente', paciente_id=paciente.id) }}"
+                       class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar cambios</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

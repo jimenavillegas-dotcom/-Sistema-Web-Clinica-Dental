@@ -1,0 +1,175 @@
+/* =========================================================
+   MENU_ROSA_FINAL_V2
+   Sidebar único para toda la Clínica Dental Dra. Rosa Elisa Arriaga
+   ========================================================= */
+
+:root {
+    --sidebar-rosa-profundo: #5d1239;
+    --sidebar-rosa-medio: #8f2056;
+    --sidebar-rosa: #b72f70;
+    --sidebar-rosa-claro: #e15a9a;
+    --sidebar-rosa-suave: #f7d7e7;
+}
+
+/* Se fuerza el mismo aspecto aunque cada página conserve reglas antiguas. */
+.sidebar.sidebar-rosa-final {
+    width: 250px !important;
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    z-index: 50 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    padding: 18px 16px 22px !important;
+    overflow-y: auto !important;
+    color: #ffffff !important;
+    background:
+        radial-gradient(circle at 25% 0%, rgba(225, 90, 154, .34), transparent 34%),
+        linear-gradient(180deg, #6f1644 0%, #53102f 55%, #35101f 100%) !important;
+    border-right: 1px solid rgba(255, 190, 220, .24) !important;
+    box-shadow: 8px 0 28px rgba(102, 18, 59, .17) !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-logo-unificado {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-height: 132px !important;
+    margin: 0 0 18px !important;
+    padding: 13px 10px 12px !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+    border: 1px solid rgba(255, 213, 232, .16) !important;
+    border-radius: 16px !important;
+    background: rgba(37, 5, 21, .28) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-logo-img,
+.sidebar.sidebar-rosa-final img.sidebar-logo-img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: 178px !important;
+    height: 76px !important;
+    max-height: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 5px 9px rgba(0,0,0,.18)) !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-identidad {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+    width: 100% !important;
+    padding: 8px 0 0 !important;
+    border-top: 1px solid rgba(255, 221, 236, .15) !important;
+    line-height: 1.2 !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-identidad span {
+    display: block !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    letter-spacing: .25px !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-identidad small {
+    display: block !important;
+    margin: 0 !important;
+    color: #f4bfd7 !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-menu-unificado {
+    display: block !important;
+    width: 100% !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-menu-unificado a {
+    display: block !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    margin: 0 0 6px !important;
+    padding: 11px 13px !important;
+    border: 1px solid transparent !important;
+    border-left: 3px solid transparent !important;
+    border-radius: 11px !important;
+    background: transparent !important;
+    color: #ffeaf3 !important;
+    text-decoration: none !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    transform: none !important;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-menu-unificado a:hover {
+    background: rgba(239, 104, 164, .20) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 191, 220, .18) !important;
+    border-left-color: #f29ac2 !important;
+    transform: translateX(2px) !important;
+}
+
+.sidebar.sidebar-rosa-final .sidebar-menu-unificado a.activo {
+    background: linear-gradient(90deg, #df4d91 0%, #b82f70 100%) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 211, 232, .32) !important;
+    border-left-color: #ffd4e7 !important;
+    box-shadow: 0 9px 22px rgba(67, 8, 36, .28) !important;
+}
+
+.sidebar.sidebar-rosa-final .salir {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    margin: auto 0 0 !important;
+    padding-top: 18px !important;
+}
+
+.sidebar.sidebar-rosa-final .salir a {
+    display: block !important;
+    padding: 10px 12px !important;
+    color: #fff4f8 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    border: 1px solid rgba(255, 210, 230, .28) !important;
+    border-radius: 10px !important;
+    background: rgba(32, 4, 18, .22) !important;
+}
+
+.sidebar.sidebar-rosa-final .salir a:hover {
+    background: rgba(225, 90, 154, .22) !important;
+    border-color: rgba(255, 220, 236, .52) !important;
+}
+
+/* Un pequeño acento rosa común en el encabezado, sin alterar el contenido. */
+.header {
+    border-bottom-color: rgba(183, 47, 112, .13) !important;
+}
+
+@media (max-width: 900px) {
+    .sidebar.sidebar-rosa-final .sidebar-logo-img,
+    .sidebar.sidebar-rosa-final img.sidebar-logo-img {
+        height: 65px !important;
+        max-width: 155px !important;
+    }
+}

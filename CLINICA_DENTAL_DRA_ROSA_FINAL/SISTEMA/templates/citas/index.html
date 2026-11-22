@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda de citas | Clínica Dental Dra. Rosa Elisa Arriaga</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/pacientes.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/citas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+</head>
+
+<body>
+<div class="contenedor">
+
+    {% include 'componentes/sidebar.html' %}
+
+    <main class="principal">
+
+        <header class="header">
+            <div>
+                <strong>Agenda de Citas</strong>
+            </div>
+
+            <div class="usuario">
+                <strong>Dra. Rosa Elisa Arriaga Aguilar</strong>
+                <span>Odontóloga general</span>
+            </div>
+        </header>
+
+        <section class="contenido agenda-contenido">
+
+            {% with mensajes = get_flashed_messages() %}
+                {% if mensajes %}
+                    {% for mensaje in mensajes %}
+                        <div class="mensaje-exito">
+                            ✓ {{ mensaje }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="agenda-encabezado">
+                <div>
+                    <span class="agenda-kicker">CONTROL DE CONSULTAS</span>
+                    <h1>Agenda de citas</h1>
+                    <p>
+                        Consulta las citas registradas, filtra la agenda
+                        y actualiza el estado de cada consulta.
+                    </p>
+                </div>
+
+                <a href="{{ url_for('pacientes') }}"
+                   class="btn-agenda-principal">
+                    + Programar cita
+                </a>
+            </div>
+
+            <div class="agenda-resumen">
+                <div class="agenda-indicador">
+                    <span>Total de citas</span>
+                    <strong>{{ total_citas }}</strong>
+                </div>
+
+                <div class="agenda-indicador">
+                    <span>Citas de hoy</span>
+                    <strong>{{ citas_hoy }}</strong>
+                </div>
+
+                <div class="agenda-indicador">
+                    <span>Próximas / pendientes</span>
+                    <strong>{{ citas_pendientes }}</strong>
+                </div>
+
+                <div class="agenda-indicador">
+                    <span>Atendidas</span>
+                    <strong>{{ citas_atendidas }}</strong>
+                </div>
+            </div>
+
+            <div class="agenda-card filtros-agenda">
+                <div class="agenda-card-titulo">
+                    <div>
+                        <h3>Buscar y filtrar</h3>
+                        <p>Localiza citas por paciente, motivo, fecha o estado.</p>
+                    </div>
+                </div>
+
+                <form method="GET"
+                      action="{{ url_for('agenda_citas') }}"
+                      class="agenda-filtros-form">
+
+                    <div class="campo">
+                        <label for="q">Paciente o motivo</label>
+                        <input type="text"
+                               id="q"
+                               name="q"
+                               value="{{ busqueda }}"
+                               placeholder="Ej. Jimena, resina, limpieza...">
+                    </div>
+
+                    <div class="campo">
+                        <label for="fecha">Fecha</label>
+                        <input type="date"
+                               id="fecha"
+                               name="fecha"
+                               value="{{ fecha_filtro }}">
+                    </div>
+
+                    <div class="campo">
+                        <label for="estado">Estado</label>
+                        <select id="estado" name="estado">
+                            <option value="">Todos</option>
+                            {% for estado in ["Programada", "Confirmada", "En atención", "Atendida", "Cancelada", "No asistió"] %}
+                                <option value="{{ estado }}"
+                                        {% if estado_filtro == estado %}selected{% endif %}>
+                                    {{ estado }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="agenda-filtros-acciones">
+                        <a href="{{ url_for('agenda_citas') }}"
+                           class="btn-limpiar-filtros">
+                            Limpiar
+                        </a>
+
+                        <button type="submit"
+                                class="btn-agenda-filtrar">
+                            Aplicar filtros
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="agenda-card">
+                <div class="agenda-card-titulo agenda-card-titulo-lista">
+                    <div>
+                        <h3>Citas registradas</h3>
+                        <p>
+                            {{ citas|length }}
+                            {% if citas|length == 1 %}
+                                resultado
+                            {% else %}
+                                resultados
+                            {% endif %}
+                            con los filtros actuales.
+                        </p>
+                    </div>
+                </div>
+
+                {% if citas %}
+                    <div class="agenda-tabla-contenedor">
+                        <table class="agenda-tabla">
+                            <thead>
+                                <tr>
+                                    <th>Fecha y hora</th>
+                                    <th>Paciente</th>
+                                    <th>Motivo</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for cita in citas %}
+                                    <tr>
+                                        <td>
+                                            <div class="agenda-fecha">
+                                                <span class="agenda-fecha-icono">📅</span>
+                                                <div>
+                                                    <strong>
+                                                        {{ cita.fecha.strftime("%d/%m/%Y") }}
+                                                    </strong>
+                                                    <span>
+                                                        {{ cita.hora.strftime("%H:%M") }} hrs
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="agenda-paciente">
+                                                <strong>
+                                                    {{ cita.paciente.nombre }}
+                                                    {{ cita.paciente.apellidos }}
+                                                </strong>
+                                                <span>
+                                                    {{ cita.paciente.numero_historia }}
+                                                </span>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="agenda-motivo">
+                                                <strong>{{ cita.motivo }}</strong>
+
+                                                {% if cita.odontologo %}
+                                                    <span>
+                                                        Odontólogo: {{ cita.odontologo }}
+                                                    </span>
+                                                {% endif %}
+
+                                                {% if cita.observaciones %}
+                                                    <small>
+                                                        {{ cita.observaciones }}
+                                                    </small>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <span class="agenda-estado agenda-estado-{{ cita.estado|lower|replace(' ', '-')|replace('ó', 'o') }}">
+                                                {{ cita.estado }}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <div class="agenda-acciones">
+                                                <a href="{{ url_for('expediente_paciente', paciente_id=cita.paciente_id, tab='citas') }}"
+                                                   class="btn-ver-expediente">
+                                                    Ver expediente
+                                                </a>
+
+                                                <form method="POST"
+                                                      action="{{ url_for('actualizar_estado_cita', cita_id=cita.id) }}"
+                                                      class="form-estado-cita">
+
+                                                    <select name="estado"
+                                                            aria-label="Estado de la cita">
+                                                        {% for estado in ["Programada", "Confirmada", "En atención", "Atendida", "Cancelada", "No asistió"] %}
+                                                            <option value="{{ estado }}"
+                                                                    {% if cita.estado == estado %}selected{% endif %}>
+                                                                {{ estado }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+
+                                                    <button type="submit"
+                                                            class="btn-actualizar-cita">
+                                                        Actualizar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="agenda-vacia">
+                        <span>📅</span>
+                        <strong>No se encontraron citas</strong>
+                        <p>
+                            No hay citas que coincidan con los filtros seleccionados.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="agenda-ayuda">
+                Para programar una cita nueva, entra a
+                <strong>Pacientes</strong>, abre el expediente correspondiente
+                y utiliza la pestaña <strong>Historial de Citas</strong>.
+            </div>
+
+        </section>
+    </main>
+</div>
+</body>
+</html>
